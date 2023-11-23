@@ -121,6 +121,16 @@ public class Plugin : BaseUnityPlugin
             player.playerUsername = name;
             player.usernameBillboardText.text = name;
             local.quickMenuManager.AddUserToPlayerList(0, name, (int)player.playerClientId);
+            //FIXME: temporary hack to fix morecompany
+            if (StartOfRound.Instance.mapScreen.radarTargets.Count <= (int)player.playerClientId)
+            {
+                if (!GameNetworkManager.Instance.disableSteam || (StartOfRound.Instance.mapScreen.radarTargets.Count - (int)player.playerClientId) > 1)
+                {
+                    Log.LogMessage($"Not enough maptargets: got {StartOfRound.Instance.mapScreen.radarTargets.Count}, need {player.playerClientId+1}");
+                    return false;
+                }
+                StartOfRound.Instance.mapScreen.radarTargets.Add(new TransformAndName(player.transform, player.playerUsername, false));
+            }
             StartOfRound.Instance.mapScreen.radarTargets[(int)player.playerClientId].name = name;
         }
         return true;
@@ -203,7 +213,7 @@ class PlayerControllerB_Name_Patch
         }
         catch (Exception e)
         {
-            Plugin.Log.LogMessage($"Exception during PlayerControllerB.ConnectClientToPlayerObject transpiler: {e}");
+            Plugin.Log.LogMessage($"Exception during PlayerControllerB.ConnectClientToPlayerObject hook: {e}");
         }
     }
 }
