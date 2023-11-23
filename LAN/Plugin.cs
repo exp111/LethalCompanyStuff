@@ -124,7 +124,7 @@ public class Plugin : BaseUnityPlugin
             //FIXME: temporary hack to fix morecompany
             if (StartOfRound.Instance.mapScreen.radarTargets.Count <= (int)player.playerClientId)
             {
-                if (!GameNetworkManager.Instance.disableSteam || (StartOfRound.Instance.mapScreen.radarTargets.Count - (int)player.playerClientId) > 1)
+                if (!GameNetworkManager.Instance.disableSteam || ((int)player.playerClientId - StartOfRound.Instance.mapScreen.radarTargets.Count) > 1)
                 {
                     Log.LogMessage($"Not enough maptargets: got {StartOfRound.Instance.mapScreen.radarTargets.Count}, need {player.playerClientId+1}");
                     return false;
